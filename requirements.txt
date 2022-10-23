@@ -1,1 +1,4 @@
 spleeter
+youtube_dl
+pydub
+Jupyter
