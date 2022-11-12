@@ -42,15 +42,19 @@ def current_datetime_str():
     return datetime_str
 
 
-def download_audio(url, save_parent_direct='audio/', audio_format='mp3'):
+def download_audio(url, save_parent_direct='audio', audio_format='mp3'):
     audio_title = get_title(url)
     audio_title = str_clean(audio_title)
 
     audio_title_first_three_words = ' '.join(
         audio_title.split(' ')[:3])
-    save_direct = save_parent_direct + current_datetime_str() + ' ' + audio_title_first_three_words
+    save_parent_direct = os.path.join(save_parent_direct,
+                                      current_datetime_str() + ' ' +
+                                      audio_title_first_three_words)
 
-    audio_direct = save_direct + '/' + audio_title + '.webm'  # .webm is the
+    audio_direct = os.path.join(save_parent_direct, audio_title +
+                                '.webm')
+    # .webm is the
     # original format. You can't directly download as mp3 but use ffmpeg to
     # convert it into mp3. Otherwise, you can't open the mp3 in Audicity
     file_direct_remove_exist(audio_direct)  # Remove the already existing
@@ -94,15 +98,19 @@ def video_format_list(url):
     return 0
 
 
-def download_video(url, save_parent_direct='video/'):
+def download_video(url, save_parent_direct='video'):
     video_title = get_title(url)
     video_title = str_clean(video_title)
 
     video_title_first_three_words = ' '.join(
         video_title.split(' ')[:3])
-    save_direct = save_parent_direct + current_datetime_str() + ' ' + video_title_first_three_words
+    save_parent_direct = os.path.join(save_parent_direct, current_datetime_str(
 
-    video_direct = save_direct + '/' + video_title + '.webm'  # .webm is the
+    ) + ' ' + video_title_first_three_words)
+
+    video_direct = os.path.join(save_parent_direct, video_title + '.webm')  #
+    # .webm is
+    # the
     # original format. You can't directly download as mp3 but use ffmpeg to
     # convert it into mp3. Otherwise, you can't open the mp3 in Audicity
     file_direct_remove_exist(video_direct)  # Remove the already existing
@@ -124,9 +132,9 @@ def main():
     url = 'https://www.youtube.com/watch?v=41DBE2mh5o8&ab_channel=TheMet'
 
     # video_format_list(url) #Tells you all the format if you want to have a look
-    # download_video(url, save_parent_direct='video/')
+    # download_video(url, save_parent_direct='video')
 
-    download_audio(url)
+    download_audio(url, save_parent_direct='audio', audio_format='mp3')
     return 0
 
 
