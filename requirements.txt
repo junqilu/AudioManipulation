@@ -2,3 +2,4 @@ spleeter
 youtube_dl
 pydub
 Jupyter
+ffmpeg-python
