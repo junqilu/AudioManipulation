@@ -13,3 +13,5 @@ Installation: https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z
 ### Audicity for labeling
 Installation: https://github.com/audacity/audacity/releases/download/Audacity-3.2.1/audacity-win-3.2.1-64bit.exe 
 
+## Speech to text (speech recognition)
+This tool can be useful in the text to speech step
