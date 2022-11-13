@@ -20,7 +20,7 @@ def trim_by_duration(in_file_direct, save_direct, duration_sec, start_sec=0):
     audio_output = ffmpeg.output(audio_cut, output_direct)
     ffmpeg.run(audio_output)
 
-    return 0
+    return output_direct
 
 
 def trim_by_end(in_file_direct, save_direct, end_sec, start_sec=0):
@@ -35,7 +35,7 @@ def trim_by_end(in_file_direct, save_direct, end_sec, start_sec=0):
     audio_output = ffmpeg.output(audio_cut, output_direct)
     ffmpeg.run(audio_output)
 
-    return 0
+    return output_direct
 
 
 def main():
