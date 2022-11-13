@@ -2,6 +2,8 @@ from datetime import datetime
 import pytz
 import youtube_dl
 import os
+import requests
+import re
 
 
 def get_title(url):
@@ -91,7 +93,8 @@ def video_format_list(url):
     # note section which format that the package think is the best
     ydl_args = {
         # 'quiet': True, #If this is True, you won't see the formatl ist
-        'listformats': True
+        'listformats': True,
+        'skip_download': True  # Skip the actual download of the video file
     }
     with youtube_dl.YoutubeDL(ydl_args) as ydl:
         ydl.download([url])
@@ -128,6 +131,76 @@ def download_video(url, save_parent_direct='video'):
     return 0
 
 
+def make_direct_if_not_exist(directory):
+    if not os.path.isdir(directory):
+        os.makedirs(directory)
+    return 0
+
+
+def download_caption(url, save_parent_direct='audio'):
+    title = get_title(url)
+    title = str_clean(title)
+
+    title_first_three_words = ' '.join(
+        title.split(' ')[:3])
+    save_parent_direct = os.path.join(save_parent_direct,
+                                      current_datetime_str() + ' ' +
+                                      title_first_three_words)
+
+    caption_direct = os.path.join(save_parent_direct, title +
+                                  '.txt')
+
+    ydl_args = {
+        'writesubtitles': True,
+        "writeautomaticsub": True,
+        'allsubtitles': True,
+
+        'skip_download': True,  # Skip the actual download of the video file
+        'subtitleslangs': ['en'],  # Only want English
+        # 'postprocessors': [{
+        #     'key': 'FFmpegSubtitlesConvertor',
+        #     'format': 'srt',
+        # }]
+    }
+
+    with youtube_dl.YoutubeDL(ydl_args) as ydl:
+        res = ydl.extract_info(url, download=False)
+        if res['requested_subtitles']:  # Youtube source has captions
+            if res['requested_subtitles']['en']:  # Youtube source has
+                # English captions
+                if len(res['subtitles']) > 0:
+                    print('YouTube source has manual captions.')
+                else:
+                    print('YouTube source has automatic_captions')
+                response = requests.get(
+                    res['requested_subtitles']['en']['url'],
+                    stream=True)
+                if response.ok:
+                    make_direct_if_not_exist(save_parent_direct)  # Create the
+                    # parent save directory so you can write in the txt file
+                    with open(caption_direct, 'w') as file:
+                        text_str = response.text
+                        text_str = re.sub(r"^([0-9]{1,})(\n\r|\n|\r)",
+                                          r"\1 |-| ", text_str, 0,
+                                          re.MULTILINE)
+                        text_str = re.sub(r"((\n\r|\n|\r){2}.*)(\n\r|\n|\r)",
+                                          r"\1 +++ ", text_str, 0,
+                                          re.MULTILINE)
+                        text_str = re.sub(r"(\+{3} .*)(\n\r|\n|\r)", r"\1 ",
+                                          text_str, 0,
+                                          re.MULTILINE)
+                        text_str = re.sub(r"(\n\r|\n|\r){2}", r"\n", text_str,
+                                          0,
+                                          re.MULTILINE)
+                        file.write(text_str)
+            else:
+                print("Youtube source doesn't have English captions")
+        else:
+            print("Youtube source doesn't have captions")
+
+    return 0
+
+
 def main():
     url = 'https://www.youtube.com/watch?v=60yGE64Xzs4&ab_channel=TheMet'
 
@@ -135,6 +208,7 @@ def main():
     # download_video(url, save_parent_direct='video')
 
     download_audio(url, save_parent_direct='audio', audio_format='mp3')
+    # download_caption(url, save_parent_direct='audio')
     return 0
 
 
