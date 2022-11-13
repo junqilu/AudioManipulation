@@ -39,9 +39,9 @@ def trim_by_end(in_file_direct, save_direct, end_sec, start_sec=0):
 
 
 def main():
-    audio_direct = "./audio/2022_11_12 Alexander McQueen's extreme/Alexander McQueen's extreme fashion that bridges art and fashion - Art, Explained.mp3"
+    audio_direct = "./audio/2022_11_12 -China- Through the/-China- Through the Looking Glass-—Gallery Views.mp3"
 
-    trim_by_end(audio_direct, None, 60, 0)
+    trim_by_end(audio_direct, None, 30, 0)
     # trim_by_duration(audio_direct, None, 50, 0)
 
     pass
