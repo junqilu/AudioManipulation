@@ -1,4 +1,8 @@
 # AudioManipulation
+This repository tries to build up a training dataset from YouTube audio and 
+transcripts, and use it to fine-tune an already trained text-to-speech 
+model. 
+
 ## Initial set up!
 ### ffmpeg for audio processing
 Installation: https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z 
@@ -6,13 +10,15 @@ Installation: https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z
    matter whether you put it in the root directory or not (I did it for 
    documentation)
 2. Copy and paste `ffmpeg.exe`, `ffplay.exe`, and `ffprobe.exe` into a 
-   directory in PATH, like `C:\Users\louie\AppData\Local\GitHubDesktop\bin` 
+   directory in your computer's PATH, like 
+   `C:\Users\louie\AppData\Local\GitHubDesktop\bin` 
    on my computer
-3. Now ffmpeg should work normally 
+3. Now `ffmpeg` should work normally 
 
 ### Audicity for labeling
 Installation: https://github.com/audacity/audacity/releases/download/Audacity-3.2.1/audacity-win-3.2.1-64bit.exe 
-* This is free 
+* This is a free alternative for Adobe Audition 
+* Download it and install it by the exe 
 
 ## Video/audio download 
 **youtube_download.py** is used for this section. 
