@@ -129,7 +129,7 @@ def download_video(url, save_parent_direct='video'):
 
 
 def main():
-    url = 'https://www.youtube.com/watch?v=41DBE2mh5o8&ab_channel=TheMet'
+    url = 'https://www.youtube.com/watch?v=60yGE64Xzs4&ab_channel=TheMet'
 
     # video_format_list(url) #Tells you all the format if you want to have a look
     # download_video(url, save_parent_direct='video')
