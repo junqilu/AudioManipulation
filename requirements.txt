@@ -1,5 +1,6 @@
-spleeter
+Jupyter
 youtube_dl
 pydub
-Jupyter
 ffmpeg-python
+spleeter
+demucs
