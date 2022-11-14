@@ -35,6 +35,23 @@ I like YouTube because it usually has closed captions with very high accuracy.
 also use `audicity` for this purpose, but using the `ffmpeg` commands is 
 faster.
 
+## Transcript/caption/subttile download
+**youtube_download.py** is used for this section. 
+
+If you set inside the arguments that you want `'writesubtitles': True, 
+'writeautomaticsub': True, 'allsubtitles': True`, in the returned ydl.
+extract_info(url, download=False), you'll have `'requested_subtitles', 
+'automatic_captions', and 'subtitles'`. 
+* `'subtitles'` will be the one for manual captions and thus, they're usually
+  fewer than `'automatic_captions'`.
+  * Also, `'subtitles'` have better quality (more accurate texts and better 
+    timestamp alignment) than `'automatic_captions'`, 
+    so you 
+    should download them first. 
+* `'requested_subtitles'` is like a union of `'subtitles'` and 
+  `'automatic_captions'`.
+
+
 ## Background noise (music) deduction 
 **background_deduction.py** is used for this section. 
 
