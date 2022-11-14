@@ -136,6 +136,16 @@ def make_direct_if_not_exist(directory):
         os.makedirs(directory)
     return 0
 
+def subtitle_format_list(url):
+    # List out all the available subttiles/captions (both automatic and
+    # manual) of a video.
+    ydl_args = {
+        'listsubtitles': True,
+        'skip_download': True  # Skip the actual download of the video file
+    }
+    with youtube_dl.YoutubeDL(ydl_args) as ydl:
+        ydl.download([url])
+    return 0
 
 def download_caption(url, save_parent_direct='audio'):
     title = get_title(url)
@@ -152,11 +162,12 @@ def download_caption(url, save_parent_direct='audio'):
 
     ydl_args = {
         'writesubtitles': True,
-        "writeautomaticsub": True,
+        'writeautomaticsub': True,
         'allsubtitles': True,
 
-        'skip_download': True,  # Skip the actual download of the video file
-        'subtitleslangs': ['en'],  # Only want English
+        'skip_download': True  # Skip the actual download of the video file
+        # 'subtitleslangs': ['en'],  # Only want English. This line doesn't
+        # really work
         # 'postprocessors': [{
         #     'key': 'FFmpegSubtitlesConvertor',
         #     'format': 'srt',
@@ -165,50 +176,79 @@ def download_caption(url, save_parent_direct='audio'):
 
     with youtube_dl.YoutubeDL(ydl_args) as ydl:
         res = ydl.extract_info(url, download=False)
-        if res['requested_subtitles']:  # Youtube source has captions
-            if res['requested_subtitles']['en']:  # Youtube source has
-                # English captions
-                if len(res['subtitles']) > 0:
-                    print('YouTube source has manual captions.')
-                else:
-                    print('YouTube source has automatic_captions')
-                response = requests.get(
-                    res['requested_subtitles']['en']['url'],
-                    stream=True)
-                if response.ok:
-                    make_direct_if_not_exist(save_parent_direct)  # Create the
-                    # parent save directory so you can write in the txt file
-                    with open(caption_direct, 'w') as file:
-                        text_str = response.text
-                        text_str = re.sub(r"^([0-9]{1,})(\n\r|\n|\r)",
-                                          r"\1 |-| ", text_str, 0,
-                                          re.MULTILINE)
-                        text_str = re.sub(r"((\n\r|\n|\r){2}.*)(\n\r|\n|\r)",
-                                          r"\1 +++ ", text_str, 0,
-                                          re.MULTILINE)
-                        text_str = re.sub(r"(\+{3} .*)(\n\r|\n|\r)", r"\1 ",
-                                          text_str, 0,
-                                          re.MULTILINE)
-                        text_str = re.sub(r"(\n\r|\n|\r){2}", r"\n", text_str,
-                                          0,
-                                          re.MULTILINE)
-                        file.write(text_str)
-            else:
-                print("Youtube source doesn't have English captions")
-        else:
-            print("Youtube source doesn't have captions")
+
+    captions_list = []
+
+    try:
+        requested_subtitles = res['requested_subtitles']
+        # res['requested_subtitles'] is available
+        try:
+            automatic_captions = res['automatic_captions']
+            # res['automatic_captions'] is available
+            caption_dict = {'type': 'automatic'}
+            for language in ['en', 'en-US']:
+                try:
+                    automatic_captions_in_language = automatic_captions[
+                        language]
+                    caption_dict['language'] = language
+                    caption_dict['list'] = automatic_captions_in_language
+                    captions_list.append(caption_dict)
+                except:
+                    print('No automatic caption in language {}'.format(
+                        language))
+        except:
+            print('No automatic caption')
+        try:
+            manual_captions = res['subtitles']
+            # res['subtitles'] is available
+            caption_dict = {'type': 'manual'}
+            for language in ['en', 'en-US']:
+                try:
+                    manual_captions_in_language = manual_captions[language]
+                    caption_dict['language'] = language
+                    caption_dict['list'] = manual_captions_in_language
+                    captions_list.append(caption_dict)
+                except:
+                    print(
+                        'No manual caption in language {}'.format(
+                            language))
+        except:
+            print('No manual caption')
+    except:
+        print('No caption')
+
+    if captions_list:  # If captions_list is not empty
+        for caption_dict in captions_list:
+            caption_type = caption_dict['type']
+            caption_language = caption_dict['language']
+            caption = caption_dict['list']
+            response = requests.get(caption[-1]['url'],
+                                    # caption[-1] is the dict for vtt captions
+                                    stream=True)
+
+            if response.ok:
+                make_direct_if_not_exist(
+                    save_parent_direct)  # Create the parent save directory, so you can write in the txt file
+                caption_direct = os.path.join(save_parent_direct,
+                                              '{}_caption_{}.txt'.format(
+                                                  caption_type,
+                                                  caption_language))
+
+                text_str = response.text
+                with open(caption_direct, 'w') as file:
+                    file.write(text_str)
 
     return 0
 
 
 def main():
-    url = 'https://www.youtube.com/watch?v=60yGE64Xzs4&ab_channel=TheMet'
+    url = 'https://www.youtube.com/watch?v=hZ4uLoWiA3I&ab_channel=TheMet'
 
     # video_format_list(url) #Tells you all the format if you want to have a look
     # download_video(url, save_parent_direct='video')
 
-    download_audio(url, save_parent_direct='audio', audio_format='mp3')
-    # download_caption(url, save_parent_direct='audio')
+    # download_audio(url, save_parent_direct='audio', audio_format='mp3')
+    download_caption(url, save_parent_direct='audio')
     return 0
 
 
