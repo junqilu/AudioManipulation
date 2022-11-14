@@ -88,6 +88,29 @@ someone singing (both of them are bad on processing situations like that).
     was trained on narratives with music, which is more suitable for your 
     purpose, but the authors didn't release the pretrained models. 
 
+## Audicity labeling
+You need background-deducted vocal and the processed transcript to finish 
+this step. 
+
+Steps: reference: https://github.com/hollygrimm/voice-dataset-creation#-create-transcriptions-for-existing-voice-recordings
+1. Load the vocal .wav in audicity. 
+2. File -> Import -> Labels, and click the processed transcript .txt
+3. You should see that labels are generated based on the time points you 
+   provided and the text on labels are the transcript you provided. 
+4. You play the audio and adjust the labels for the time and text on the 
+   label. 
+   * During labeling, try to avoid leading and trailing spaces in the label 
+     texts. Also ensure the punctuations are correct.  
+5. File -> Save project -> Save project, just in case if you want to make 
+   changes later. 
+6. File -> Export -> Export multiple. Set up as below and click Export 
+   * Folder: ...\wavs_export and click Create
+   * Format: WAV
+   * Options: Signed 16-bit PCM
+   * Split files based on: Labels
+   * Name files: Using Label/Track Name
+7. File -> Export -> Export labels, and save the file as labels.txt
+
 ## Speech to text (speech recognition)
 This is only necessary if you don't have a transcript for the audio you're 
 working on. 
