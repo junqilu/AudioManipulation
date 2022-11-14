@@ -52,22 +52,24 @@ def music_spleeter_split(in_file_direct, save_direct):
 
 
 def main():
-    audio_direct = "./audio/2022_11_12 -China- Through the/-China- Through " \
-                   "the Looking Glass-—Gallery Views.mp3"
+    audio_direct = "./audio/2022_11_13 Exhibition Tour—In America-/Exhibition Tour—In America- A Lexicon of Fashion with Andrew Bolton.mp3"
 
     # output_direct = file_trim.trim_by_duration(audio_direct, None, 30, 0) #For generating a testing file
 
     # music_spleeter_split(output_direct, None) #I like demucs more since it
     # performs a bit better
 
-    for root, dirs, files in os.walk('./audio'):  # Iterate all .mp3 in this
-        # folder's sub folders
-        for name in files:
-            in_file_direct = os.path.join(root, name)  # This is the directory
-            # to the input audio file, like './audio/2022_11_12 -China- Through the/start from 0s with duration of 30s.mp3'
+    # Batch mode below
+    # for root, dirs, files in os.walk('./audio'):  # Iterate all .mp3 in this
+    #     # folder's sub folders
+    #     for name in files:
+    #         in_file_direct = os.path.join(root, name)  # This is the directory
+    #         # to the input audio file, like './audio/2022_11_12 -China- Through the/start from 0s with duration of 30s.mp3'
+    #
+    #         music_demucs_split(in_file_direct, None)  # Split the audio file.
+    #         # The format of output has been set up inside music_demucs_split()
 
-            music_demucs_split(in_file_direct, None)  # Split the audio file.
-            # The format of output has been set up inside music_demucs_split()
+    music_demucs_split(audio_direct, None)
     return 0
 
 
