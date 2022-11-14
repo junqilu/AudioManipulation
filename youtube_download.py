@@ -2,6 +2,8 @@ from datetime import datetime
 import pytz
 import youtube_dl
 import os
+import requests
+import re
 
 
 def get_title(url):
@@ -91,7 +93,8 @@ def video_format_list(url):
     # note section which format that the package think is the best
     ydl_args = {
         # 'quiet': True, #If this is True, you won't see the formatl ist
-        'listformats': True
+        'listformats': True,
+        'skip_download': True  # Skip the actual download of the video file
     }
     with youtube_dl.YoutubeDL(ydl_args) as ydl:
         ydl.download([url])
@@ -128,13 +131,129 @@ def download_video(url, save_parent_direct='video'):
     return 0
 
 
+def make_direct_if_not_exist(directory):
+    if not os.path.isdir(directory):
+        os.makedirs(directory)
+    return 0
+
+
+def subtitle_format_list(url):
+    # List out all the available subttiles/captions (both automatic and
+    # manual) of a video.
+    ydl_args = {
+        'listsubtitles': True,
+        'skip_download': True  # Skip the actual download of the video file
+    }
+    with youtube_dl.YoutubeDL(ydl_args) as ydl:
+        ydl.download([url])
+    return 0
+
+
+def download_caption(url, save_parent_direct='audio',
+                     language_list=['en', 'en-US']):
+    title = get_title(url)
+    title = str_clean(title)
+
+    title_first_three_words = ' '.join(
+        title.split(' ')[:3])
+    save_parent_direct = os.path.join(save_parent_direct,
+                                      current_datetime_str() + ' ' +
+                                      title_first_three_words)
+
+    caption_direct = os.path.join(save_parent_direct, title +
+                                  '.txt')
+
+    ydl_args = {
+        'writesubtitles': True,
+        'writeautomaticsub': True,
+        'allsubtitles': True,
+
+        'skip_download': True  # Skip the actual download of the video file
+        # 'subtitleslangs': ['en'],  # Only want English. This line doesn't
+        # really work
+        # 'postprocessors': [{
+        #     'key': 'FFmpegSubtitlesConvertor',
+        #     'format': 'srt',
+        # }]
+    }
+
+    with youtube_dl.YoutubeDL(ydl_args) as ydl:
+        res = ydl.extract_info(url, download=False)
+
+    captions_list = []
+
+    try:
+        requested_subtitles = res['requested_subtitles']
+        # res['requested_subtitles'] is available
+        try:
+            automatic_captions = res['automatic_captions']
+            # res['automatic_captions'] is available
+            caption_dict = {'type': 'automatic'}
+            for language in language_list:
+                try:
+                    automatic_captions_in_language = automatic_captions[
+                        language]
+                    caption_dict['language'] = language
+                    caption_dict['list'] = automatic_captions_in_language
+                    captions_list.append(caption_dict)
+                except:
+                    print('No automatic caption in language {}'.format(
+                        language))
+        except:
+            print('No automatic caption')
+        try:
+            manual_captions = res['subtitles']
+            # res['subtitles'] is available
+            caption_dict = {'type': 'manual'}
+            for language in language_list:
+                try:
+                    manual_captions_in_language = manual_captions[language]
+                    caption_dict['language'] = language
+                    caption_dict['list'] = manual_captions_in_language
+                    captions_list.append(caption_dict)
+                except:
+                    print(
+                        'No manual caption in language {}'.format(
+                            language))
+        except:
+            print('No manual caption')
+    except:
+        print('No caption')
+
+    if captions_list:  # If captions_list is not empty
+        for caption_dict in captions_list:
+            caption_type = caption_dict['type']
+            caption_language = caption_dict['language']
+            caption = caption_dict['list']
+            response = requests.get(caption[-1]['url'],
+                                    # caption[-1] is the dict for vtt captions
+                                    stream=True)
+
+            if response.ok:
+                make_direct_if_not_exist(
+                    save_parent_direct)  # Create the parent save directory, so you can write in the txt file
+                caption_direct = os.path.join(save_parent_direct,
+                                              '{}_caption_{}.txt'.format(
+                                                  caption_type,
+                                                  caption_language))
+
+                text_str = response.text
+                with open(caption_direct, 'w') as file:
+                    file.write(text_str)
+
+    return 0
+
+
 def main():
-    url = 'https://www.youtube.com/watch?v=41DBE2mh5o8&ab_channel=TheMet'
+    url = 'https://www.youtube.com/watch?v=zHhabL3pUjg&t=264s&ab_channel=TheMet'
 
     # video_format_list(url) #Tells you all the format if you want to have a look
     # download_video(url, save_parent_direct='video')
 
     download_audio(url, save_parent_direct='audio', audio_format='mp3')
+
+    # subtitle_format_list(url)
+    download_caption(url, save_parent_direct='audio')
     return 0
 
 
