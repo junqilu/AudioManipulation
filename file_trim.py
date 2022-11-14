@@ -1,4 +1,3 @@
-import spleeter
 import ffmpeg
 import os
 import pathlib
@@ -31,7 +30,8 @@ def trim_by_end(in_file_direct, save_direct, end_sec, start_sec=0):
         start_sec, end_sec, in_file_format))
 
     audio_input = ffmpeg.input(in_file_direct)
-    audio_cut = audio_input.audio.filter('atrim', start=start_sec, end=end_sec)
+    audio_cut = audio_input.audio.filter('atrim', start=start_sec,
+                                         end=end_sec)
     audio_output = ffmpeg.output(audio_cut, output_direct)
     ffmpeg.run(audio_output)
 
@@ -41,7 +41,7 @@ def trim_by_end(in_file_direct, save_direct, end_sec, start_sec=0):
 def main():
     audio_direct = "./audio/2022_11_12 -China- Through the/-China- Through the Looking Glass-—Gallery Views.mp3"
 
-    trim_by_end(audio_direct, None, 30, 0)
+    trim_by_end(audio_direct, None, 30, 10)
     # trim_by_duration(audio_direct, None, 50, 0)
 
     pass
