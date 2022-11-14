@@ -136,6 +136,7 @@ def make_direct_if_not_exist(directory):
         os.makedirs(directory)
     return 0
 
+
 def subtitle_format_list(url):
     # List out all the available subttiles/captions (both automatic and
     # manual) of a video.
@@ -147,7 +148,9 @@ def subtitle_format_list(url):
         ydl.download([url])
     return 0
 
-def download_caption(url, save_parent_direct='audio'):
+
+def download_caption(url, save_parent_direct='audio',
+                     language_list=['en', 'en-US']):
     title = get_title(url)
     title = str_clean(title)
 
@@ -186,7 +189,7 @@ def download_caption(url, save_parent_direct='audio'):
             automatic_captions = res['automatic_captions']
             # res['automatic_captions'] is available
             caption_dict = {'type': 'automatic'}
-            for language in ['en', 'en-US']:
+            for language in language_list:
                 try:
                     automatic_captions_in_language = automatic_captions[
                         language]
@@ -202,7 +205,7 @@ def download_caption(url, save_parent_direct='audio'):
             manual_captions = res['subtitles']
             # res['subtitles'] is available
             caption_dict = {'type': 'manual'}
-            for language in ['en', 'en-US']:
+            for language in language_list:
                 try:
                     manual_captions_in_language = manual_captions[language]
                     caption_dict['language'] = language
@@ -242,12 +245,14 @@ def download_caption(url, save_parent_direct='audio'):
 
 
 def main():
-    url = 'https://www.youtube.com/watch?v=hZ4uLoWiA3I&ab_channel=TheMet'
+    url = 'https://www.youtube.com/watch?v=zHhabL3pUjg&t=264s&ab_channel=TheMet'
 
     # video_format_list(url) #Tells you all the format if you want to have a look
     # download_video(url, save_parent_direct='video')
 
-    # download_audio(url, save_parent_direct='audio', audio_format='mp3')
+    download_audio(url, save_parent_direct='audio', audio_format='mp3')
+
+    # subtitle_format_list(url)
     download_caption(url, save_parent_direct='audio')
     return 0
 
