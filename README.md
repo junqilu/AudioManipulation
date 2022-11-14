@@ -35,7 +35,7 @@ I like YouTube because it usually has closed captions with very high accuracy.
 also use `audicity` for this purpose, but using the `ffmpeg` commands is 
 faster.
 
-## Transcript/caption/subttile download
+## Transcript/caption/subtitle download
 **youtube_download.py** is used for this section. 
 
 If you set inside the arguments that you want `'writesubtitles': True, 
@@ -51,6 +51,16 @@ extract_info(url, download=False), you'll have `'requested_subtitles',
 * `'requested_subtitles'` is like a union of `'subtitles'` and 
   `'automatic_captions'`.
 
+## Transcript/caption/subtitle processing
+**transcript_processing.py** is used for this section. 
+
+Downloaded transcripts can have different formats, so you need to double-check on the output file before you import it into audicity for labeling. 
+
+The resulting output label txt is just a base and you can manually edit it 
+before use it for labeling in audicity. 
+* You can fuse some terms together to ensure a label is always a full 
+  sentence. 
+* For separating several sentences, you need to do it inside audicity. 
 
 ## Background noise (music) deduction 
 **background_deduction.py** is used for this section. 
@@ -79,6 +89,11 @@ someone singing (both of them are bad on processing situations like that).
     purpose, but the authors didn't release the pretrained models. 
 
 ## Speech to text (speech recognition)
+This is only necessary if you don't have a transcript for the audio you're 
+working on. 
+* If the transcript for YouTube is manual (thus, very high accuracy and 
+  time alignment), then you don't need to do this section.
+
 This tool can be useful in the batch text to speech step as your job should 
 be making small corrections on the transcription process rather than you do 
 the transcription 
