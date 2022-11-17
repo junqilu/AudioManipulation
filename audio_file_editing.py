@@ -60,6 +60,46 @@ def trim_by_end(in_file_direct, save_direct, end_sec, start_sec=0):
     return output_direct
 
 
+def trim_files(init_direct_str, save_direct=None):
+    files = select_files(init_direct_str)
+    for file in files:  # Since I'm using a for loop here, it doesn't matter
+        # whether the user really picked multiple files or just a single file
+
+        # trim_by_end(file, save_direct, end_sec=30, start_sec=10)
+        trim_by_duration(file, save_direct, duration_sec=50, start_sec=0)
+
+    return 0
+
+
+def concatenate_files(init_direct_str, save_direct):
+    files = select_files(init_direct_str)
+
+    if len(files) < 1:
+        print('No file was selected.')
+        return 0
+    else:
+        if save_direct is None:
+            save_direct = os.path.dirname(files[0])
+        in_file_format = pathlib.Path(files[0]).suffix
+        output_direct = os.path.join(save_direct, 'combine result{}'.format(
+            in_file_format))
+
+        # The command that you want to create is something like 'ffmpeg -i "C:/Users/louie/Desktop/test/vocals1.wav" -i "C:/Users/louie/Desktop/test/vocals2.wav" -filter_complex "[0:0][1:0]concat=n=2:v=0:a=1[out]" -map "[out]" "C:/Users/louie/Desktop/test\\combine result.wav"'
+        cmd_str = 'ffmpeg'
+        for file in files:
+            cmd_str += ' -i \"{}\"'.format(file)
+
+        cmd_str += ' -filter_complex \"'
+        for idx, file in enumerate(files):
+            cmd_str += '[{}:0]'.format(idx)
+
+        cmd_str += 'concat=n={}:v=0:a=1[out]\"'.format(len(files))
+
+        cmd_str += ' -map \"[out]\" \"{}\"'.format(output_direct)
+        sp.call(cmd_str, shell=True)
+        return 0
+
+
 def main():
     audio_direct = "./audio/2022_11_12 -China- Through the/-China- Through the Looking Glass-—Gallery Views.mp3"
 
