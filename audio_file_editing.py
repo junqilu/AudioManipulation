@@ -25,7 +25,8 @@ def select_files(init_direct_str):
 
 
 
-def trim_by_duration(in_file_direct, save_direct, duration_sec, start_sec=0):
+def trim_by_duration(in_file_direct, duration_sec, save_direct=None,
+                     start_sec=0):
     if save_direct is None:
         save_direct = os.path.dirname(in_file_direct)
     in_file_format = pathlib.Path(in_file_direct).suffix
@@ -44,7 +45,7 @@ def trim_by_duration(in_file_direct, save_direct, duration_sec, start_sec=0):
     return output_direct
 
 
-def trim_by_end(in_file_direct, save_direct, end_sec, start_sec=0):
+def trim_by_end(in_file_direct, end_sec, save_direct=None, start_sec=0):
     if save_direct is None:
         save_direct = os.path.dirname(in_file_direct)
     in_file_format = pathlib.Path(in_file_direct).suffix
@@ -101,10 +102,7 @@ def concatenate_files(init_direct_str, save_direct):
 
 
 def main():
-    audio_direct = "./audio/2022_11_12 -China- Through the/-China- Through the Looking Glass-—Gallery Views.mp3"
-
-    trim_by_end(audio_direct, None, 30, 10)
-    # trim_by_duration(audio_direct, None, 50, 0)
+    concatenate_files('', save_direct=None)
 
     pass
 
