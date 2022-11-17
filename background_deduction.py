@@ -1,4 +1,4 @@
-import file_trim
+import audio_file_editing
 import os
 import subprocess as sp
 from spleeter.separator import Separator
