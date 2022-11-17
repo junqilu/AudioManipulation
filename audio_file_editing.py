@@ -1,6 +1,28 @@
 import ffmpeg
 import os
 import pathlib
+from tkinter import filedialog
+import subprocess as sp
+
+
+def select_files(init_direct_str):
+    filetypes = (
+        ('All audio files', '*.mp3 *.wav'),
+        ('All files', '*.*')
+    )
+
+    filenames_tuple = filedialog.askopenfilenames(
+        title='Select multiple files to process...',
+        initialdir=init_direct_str,
+        filetypes=filetypes,
+    ) #filenames_tuple is a tuple of all the files' directories you selected.
+    # If you only
+    # select 1 file, filenames will be a tuple of length 1. I'll iterate
+    # through this filenames_tuple, so you don't need to worry about whether
+    # the user selected only 1 or multiple files
+
+    return filenames_tuple
+
 
 
 def trim_by_duration(in_file_direct, save_direct, duration_sec, start_sec=0):
