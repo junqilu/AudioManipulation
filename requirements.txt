@@ -4,3 +4,5 @@ pydub
 ffmpeg-python
 spleeter
 demucs
+SpeechRecognition
+pydub
