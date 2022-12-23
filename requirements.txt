@@ -6,3 +6,4 @@ spleeter
 demucs
 SpeechRecognition
 pydub
+googletrans==3.1.0a0

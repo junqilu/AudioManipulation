@@ -127,3 +127,17 @@ working on.
 This tool can be useful in the batch text to speech step as your job should 
 be making small corrections on the transcription process rather than you do 
 the transcription 
+
+# Audio sources
+## Andrew Bolton
+Mainly YouTube videos
+* "China: Through the Looking Glass"—Gallery Views: https://www.youtube.com/watch?v=NUOcySpiX80&t=116s&ab_channel=TheMet
+* Alexander McQueen's extreme fashion that bridges art and fashion | Art, 
+  Explained: https://www.youtube.com/watch?v=41DBE2mh5o8&ab_channel=TheMet
+* Alexander McQueen: Savage Beauty - Gallery Views 2011: https://www.youtube.com/watch?v=Pg0HwLAJyV0&t=30s&ab_channel=TheMet
+* Exhibition Tour—In America: An Anthology of Fashion with Andrew Bolton: https://www.youtube.com/watch?v=hZ4uLoWiA3I&t=21s&ab_channel=TheMet
+* Exhibition Tour—In America: A Lexicon of Fashion with Andrew Bolton: https://www.youtube.com/watch?v=zHhabL3pUjg&ab_channel=TheMet
+## Red alert 2
+https://voicewiki.cn/wiki/%E7%BA%A2%E8%89%B2%E8%AD%A6%E6%88%922
+* Mainly for Zofia's and Yuri's voice. 
+
